@@ -1,0 +1,37 @@
+%{
+//(Important!) Include the correct header file.
+#include "alperbingol-hw2.tab.h"
+%}
+IDENT [a-zA-Z_][a-zA-Z0-9_]*
+INT -?[0-9]+(E[0-9]+)?
+REAL -?[0-9]+"."[0-9]+(E-?[0-9]+)?
+
+
+%%
+"int"			 return tINTTYPE;
+"int"[ ]+"vector"	 return tINTVECTORTYPE;
+"int"[ ]+"matrix"	 return tINTMATRIXTYPE;
+"real"			 return tREALTYPE;
+"real vector"		 return tREALVECTORTYPE;
+"real matrix"		 return tREALMATRIXTYPE;
+"if"			 return tIF;
+"endif"			 return tENDIF;
+"transpose"		 return tTRANSPOSE;
+"=="			 return tEQ;
+"<" 			 return tLT;
+">" 			 return tGT;
+"&&"			 return tAND;
+".*"			 return tDOTPROD;
+"!="			 return tNE;
+"<="			 return tLTE;
+">="			 return tGTE;
+"||"			 return tOR;
+{IDENT}			 return tIDENT;
+{INT}			 return	tINTNUM;
+{REAL}			 return tREALNUM;
+[ \t\n]+
+.			return yytext[0];
+
+%%
+
+
