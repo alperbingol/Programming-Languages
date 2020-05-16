@@ -1,0 +1,145 @@
+%{
+int line_number=1;
+#include <string.h>
+int i;
+int len;
+char* x="";
+#
+%}
+
+%x comment
+
+tPOSINT		 [\+]?[0-9]*[E]?[0-9]+
+tPOSREAL 	 [\+]?[0-9]+\.[0-9]*E?[\-]?[0-9]+
+tNEGINT		 [\-][0-9]*E?[0-9]+
+tNEGREAL	 [-][0-9]+\.[0-9]*E?[\-]?[0-9]+
+tIDENT		 [a-zA-Z][a-zA-Z0-9_]*
+tINT		 "int"
+tREAL		 "real"
+tIF 		 "if"
+tENDIF 		 "endif"
+tVECTOR 	 vector
+tMATRIX		 matrix
+tTRANSPOSE 	transpose
+tCOMMA 		\,
+tLPAR 		\(
+tRPAR 		\)
+tMINUS 		\-
+tDIV 		\/
+tSEMI 		\;
+tINEQ 		!=
+tLE 		<=
+tGE 		>=
+tRBRAC 		\]
+tOR 		\|\|
+tASSIGNM 	\=
+tPLUS 		\+
+tEQUL 		==
+tLT 		\<
+tGT 		\>
+tLBRAC 		\[
+tAND 		\&&
+tSTAR 		\*
+tDOTPROD 	\.\*
+
+%%
+\n line_number++;
+" "
+"	"
+
+
+
+"//" BEGIN(comment);
+<comment>"\n" {BEGIN(INITIAL);
+line_number++;}
+<comment>[^\n]
+{tCOMMA}	 printf("%d %s\n",line_number,"tCOMMA");
+{tLPAR} 	 printf("%d %s\n", line_number,"tLPAR");
+{tASSIGNM} 	 printf("%d %s\n",line_number,"tASSIGNM");
+{tPLUS}		 printf("%d %s\n", line_number,"tPLUS");
+{tSTAR}		 printf("%d %s\n", line_number,"tSTAR");
+{tEQUL}		 printf("%d %s\n", line_number,"tEQUL");
+{tLT}		 printf("%d %s\n", line_number,"tLT");
+{tGT}		 printf("%d %s\n", line_number,"tGT");
+{tLBRAC}	 printf("%d %s\n", line_number,"tLBRAC");
+{tAND}		 printf("%d %s\n", line_number,"tAND");
+{tRPAR}          printf("%d %s\n", line_number, "tRPAR");
+{tMINUS}         printf("%d %s\n", line_number, "tMINUS");
+{tDIV}           printf("%d %s\n", line_number, "tDIV");
+{tSEMI}          printf("%d %s\n", line_number, "tSEMI");
+{tINEQ}          printf("%d %s\n", line_number, "tINEQ");
+{tLE}            printf("%d %s\n", line_number, "tLE");
+{tGE}            printf("%d %s\n", line_number, "tGE");
+{tRBRAC}         printf("%d %s\n", line_number, "tRBRAC");
+{tOR}            printf("%d %s\n", line_number, "tOR");
+{tINT}           printf("%d %s\n", line_number, "tINT");
+{tREAL}          printf("%d %s\n", line_number, "tREAL");
+{tIF}            printf("%d %s\n", line_number, "tIF");
+{tENDIF}         printf("%d %s\n", line_number, "tENDIF");
+{tVECTOR}        printf("%d %s\n", line_number, "tVECTOR");
+{tMATRIX}        printf("%d %s\n", line_number, "tMATRIX");
+{tTRANSPOSE}     printf("%d %s\n", line_number, "tTRANSPOSE");
+
+{tIDENT}         printf("%d %s %s %s %s\n", line_number, "tIDENT", "(", yytext,")");
+
+
+{tPOSINT}        {printf("%d %s %s%s%s", line_number, "tPOSINT", "(", yytext,") ");
+
+
+printf("(");
+x=strdup(yytext);
+int len=yyleng;
+func(x,len);
+printf(")\n");
+}
+
+
+
+
+{tNEGINT}        {printf("%d %s %s", line_number, "tNEGINT", yytext);
+
+printf(" (-");
+x=strdup(yytext);
+int len=yyleng;
+x=x+1;
+func(x,len);
+printf(")\n");
+
+}
+
+
+
+{tDOTPROD}	 printf("%d %s\n", line_number, "tDOTPROD");
+
+
+{tPOSREAL}	 printf("%d %s %s\n", line_number, "tPOSREAL",yytext);
+
+
+{tNEGREAL}	 printf("%d %s %s\n", line_number, "tNEGREAL", yytext);
+
+
+
+
+
+
+%%
+func(char* x, int le){
+	char* temp=x;
+	int count=0;
+	i=0;
+	while(i<le){
+	   if(x[0]=='0') {count++; x=x+1;}
+	   else{break;}
+	   i++;
+	}
+	if(temp!=x)
+	printf("%s", x);
+}
+
+
+
+
+
+main(){
+     yylex();
+}
